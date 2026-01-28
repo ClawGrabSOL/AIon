@@ -2,7 +2,5 @@
   "name": "aion-chat",
   "version": "1.0.0",
   "private": true,
-  "dependencies": {
-    "dotenv": "^17.2.3"
-  }
+  "type": "module"
 }
