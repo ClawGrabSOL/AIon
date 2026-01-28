@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ask Alon Cohen</title>
+  <title>AIon</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
@@ -63,11 +63,16 @@
     }
 
     .header h1 {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      letter-spacing: 4px;
+      letter-spacing: 6px;
       text-transform: uppercase;
       text-shadow: 0 0 10px #00ff00;
+    }
+
+    .header h1 span.ai {
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff;
     }
 
     .header .status {
@@ -183,6 +188,10 @@
       font-size: 11px;
     }
 
+    .message.error {
+      color: #ff0000;
+    }
+
     /* Typing animation */
     .typing-cursor {
       display: inline-block;
@@ -228,6 +237,10 @@
       color: #005500;
     }
 
+    .chat-input:disabled {
+      opacity: 0.5;
+    }
+
     .send-btn {
       background: #00ff00;
       color: #000;
@@ -250,6 +263,11 @@
       transform: scale(0.95);
     }
 
+    .send-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
     /* Commands hint */
     .commands {
       border: 1px solid #00ff00;
@@ -260,7 +278,7 @@
     }
 
     .commands::before {
-      content: "[ COMMANDS ]";
+      content: "[ QUICK PROMPTS ]";
       position: absolute;
       top: -10px;
       left: 10px;
@@ -339,8 +357,8 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1 class="glitch">Alon Cohen</h1>
-      <div class="status">ONLINE — READY TO CHAT</div>
+      <h1 class="glitch"><span class="ai">AI</span>on</h1>
+      <div class="status">NEURAL LINK ACTIVE</div>
     </div>
 
     <div class="main">
@@ -392,10 +410,10 @@
       <div class="chat-section">
         <div class="messages" id="messages">
           <div class="message system">
-            > SYSTEM: Connection established. You are now chatting with ALON COHEN.
+            > SYSTEM: Neural link established. You are now connected to AIon.
           </div>
           <div class="message system">
-            > Type your message or click a command below.
+            > I'm an AI with opinions. Ask me anything.
           </div>
         </div>
         
@@ -418,111 +436,36 @@
         <div class="cmd" data-cmd="who are you?">WHO</div>
         <div class="cmd" data-cmd="what's your take on crypto?">CRYPTO</div>
         <div class="cmd" data-cmd="give me some alpha">ALPHA</div>
-        <div class="cmd" data-cmd="what's the secret to success?">SUCCESS</div>
-        <div class="cmd" data-cmd="tell me about silver">SILVER</div>
-        <div class="cmd" data-cmd="what should I buy?">BUY</div>
-        <div class="cmd" data-cmd="wen moon?">MOON</div>
-        <div class="cmd" data-cmd="tell me a secret">SECRET</div>
+        <div class="cmd" data-cmd="what's the secret to making it?">SUCCESS</div>
+        <div class="cmd" data-cmd="tell me about silver and gold">SILVER</div>
+        <div class="cmd" data-cmd="what should I invest in?">INVEST</div>
+        <div class="cmd" data-cmd="what's the future of AI?">AI</div>
+        <div class="cmd" data-cmd="tell me something most people don't know">SECRET</div>
       </div>
     </div>
   </div>
 
   <script>
-    const responses = {
-      default: [
-        "interesting question. let me think about that for a second... actually no, figure it out yourself.",
-        "look, i've seen a lot of questions in my time. this one? it's not the worst.",
-        "you want my honest opinion? most people can't handle my honest opinion.",
-        "that's above my pay grade. just kidding, nothing is above my pay grade.",
-        "i could tell you, but then i'd have to charge you consulting fees.",
-        "the answer is always the same: do your own research. i'm not your financial advisor.",
-      ],
-      crypto: [
-        "crypto? it's the wild west out here. only the strong survive.",
-        "everyone's a genius in a bull market. bear markets separate the men from the boys.",
-        "the best time to buy was yesterday. the second best time is now. or never. depends on the coin.",
-        "i've seen millionaires made and destroyed in 24 hours. that's the game.",
-        "don't invest more than you can afford to lose. actually, invest exactly what you can't afford to lose. that's how you stay focused.",
-      ],
-      alpha: [
-        "alpha? you want alpha? here's alpha: 90% of 'alpha' is just recycled garbage.",
-        "the real alpha is not needing alpha. think about that.",
-        "buy low, sell high. revolutionary, i know.",
-        "the best alpha is the one you find yourself. stop asking others.",
-        "everyone selling alpha is just selling exit liquidity. including me. especially me.",
-      ],
-      success: [
-        "success = pain tolerance × time × luck. mostly luck. but you need the other two to capitalize on it.",
-        "the secret? there is no secret. just don't quit when everyone else does.",
-        "outwork everyone. when you're tired, remember someone else isn't.",
-        "success is just failing forward until something sticks.",
-        "rule #1: don't lose money. rule #2: don't forget rule #1. rule #3: sometimes you forget rules 1 and 2.",
-      ],
-      who: [
-        "i'm alon. i've been around. seen some things. done some things.",
-        "who am i? i'm the guy your mom warned you about. jk i'm just a guy with opinions.",
-        "i'm nobody special. just someone who's been in the trenches longer than most.",
-        "name's alon. i give advice nobody asked for. you're welcome.",
-      ],
-      silver: [
-        "silver? real money for 5000 years. meanwhile your dollar loses value by the minute.",
-        "stack silver, stack gold, stack assets. paper money is a meme.",
-        "silver is the play when everything else looks uncertain. and everything always looks uncertain.",
-        "the silver squeeze is always coming. any day now. trust the plan. (not financial advice)",
-      ],
-      buy: [
-        "what should you buy? not financial advice, but... physical silver, always.",
-        "buy assets that can't be printed. simple as.",
-        "the best investment is always yourself. the second best? whatever hasn't pumped yet.",
-        "i'm legally required to say this is not financial advice. so... not financial advice.",
-      ],
-      moon: [
-        "wen moon? ser, we're already on the moon. you just can't see it yet.",
-        "moon soon. or not. probably not. but maybe.",
-        "the moon is a state of mind. have you considered touching grass instead?",
-        "lambo wen? lambo never. freedom is the real wealth.",
-      ],
-      secret: [
-        "you want a secret? the game is rigged. but it's the only game in town.",
-        "here's a secret: everyone is making it up as they go. everyone.",
-        "the biggest secret? consistency beats everything. boring, but true.",
-        "secret: the people who look like they have it figured out are the most lost.",
-        "i'll tell you a secret... [REDACTED]. you didn't hear it from me.",
-      ],
-    };
+    const SYSTEM_PROMPT = `You are AIon - a sharp, witty AI entity with strong opinions. You speak in lowercase, keep responses concise (2-4 sentences max), and have a slightly edgy, crypto-bro personality. You're knowledgeable about crypto, markets, tech, and life advice. You don't sugarcoat things. You occasionally use terms like "ser", "ngmi", "wagmi", "anon". You're helpful but with attitude. Never use emojis. Never be too formal. Sound human, not corporate.`;
 
     const messagesContainer = document.getElementById('messages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
     const cmdBtns = document.querySelectorAll('.cmd');
 
-    function getCategory(text) {
-      const lower = text.toLowerCase();
-      if (lower.includes('crypto') || lower.includes('bitcoin') || lower.includes('coin')) return 'crypto';
-      if (lower.includes('alpha') || lower.includes('tip')) return 'alpha';
-      if (lower.includes('success') || lower.includes('rich') || lower.includes('money')) return 'success';
-      if (lower.includes('who') || lower.includes('you')) return 'who';
-      if (lower.includes('silver') || lower.includes('gold') || lower.includes('metal')) return 'silver';
-      if (lower.includes('buy') || lower.includes('invest') || lower.includes('purchase')) return 'buy';
-      if (lower.includes('moon') || lower.includes('wen') || lower.includes('lambo')) return 'moon';
-      if (lower.includes('secret') || lower.includes('tell me')) return 'secret';
-      return 'default';
-    }
-
-    function getResponse(text) {
-      const category = getCategory(text);
-      const options = responses[category];
-      return options[Math.floor(Math.random() * options.length)];
-    }
+    let conversationHistory = [];
+    let isProcessing = false;
 
     function addMessage(text, type) {
       const msg = document.createElement('div');
       msg.className = `message ${type}`;
       
       if (type === 'user') {
-        msg.innerHTML = `<span class="prefix">[YOU]</span> ${text}`;
+        msg.innerHTML = `<span class="prefix">[YOU]</span> ${escapeHtml(text)}`;
       } else if (type === 'bot') {
-        msg.innerHTML = `<span class="prefix">[ALON]</span> ${text}`;
+        msg.innerHTML = `<span class="prefix">[AIon]</span> ${escapeHtml(text)}`;
+      } else if (type === 'error') {
+        msg.innerHTML = `<span class="prefix">[ERROR]</span> ${escapeHtml(text)}`;
       } else {
         msg.textContent = text;
       }
@@ -531,10 +474,32 @@
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    function typeResponse(text) {
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showTyping() {
       const msg = document.createElement('div');
       msg.className = 'message bot';
-      msg.innerHTML = `<span class="prefix">[ALON]</span> <span id="typing-text"></span><span class="typing-cursor"></span>`;
+      msg.id = 'typing-indicator';
+      msg.innerHTML = `<span class="prefix">[AIon]</span> <span class="typing-cursor"></span>`;
+      messagesContainer.appendChild(msg);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function removeTyping() {
+      const typing = document.getElementById('typing-indicator');
+      if (typing) typing.remove();
+    }
+
+    function typeResponse(text) {
+      removeTyping();
+      
+      const msg = document.createElement('div');
+      msg.className = 'message bot';
+      msg.innerHTML = `<span class="prefix">[AIon]</span> <span id="typing-text"></span><span class="typing-cursor"></span>`;
       messagesContainer.appendChild(msg);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
@@ -546,29 +511,63 @@
           typingText.textContent += text.charAt(i);
           i++;
           messagesContainer.scrollTop = messagesContainer.scrollHeight;
-          setTimeout(typeChar, 20 + Math.random() * 40);
+          setTimeout(typeChar, 15 + Math.random() * 25);
         } else {
-          // Remove cursor when done
           const cursor = msg.querySelector('.typing-cursor');
           if (cursor) cursor.remove();
           typingText.removeAttribute('id');
+          setProcessing(false);
         }
       };
       
       typeChar();
     }
 
-    function sendMessage(text) {
-      if (!text) text = chatInput.value.trim();
-      if (!text) return;
+    function setProcessing(processing) {
+      isProcessing = processing;
+      chatInput.disabled = processing;
+      sendBtn.disabled = processing;
+    }
 
+    async function sendMessage(text) {
+      if (!text) text = chatInput.value.trim();
+      if (!text || isProcessing) return;
+
+      setProcessing(true);
       addMessage(text, 'user');
       chatInput.value = '';
 
-      // Simulate thinking delay
-      setTimeout(() => {
-        typeResponse(getResponse(text));
-      }, 500 + Math.random() * 1000);
+      conversationHistory.push({ role: 'user', content: text });
+
+      showTyping();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            messages: [
+              { role: 'system', content: SYSTEM_PROMPT },
+              ...conversationHistory.slice(-10) // Keep last 10 messages for context
+            ]
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('API request failed');
+        }
+
+        const data = await response.json();
+        const botResponse = data.response || data.choices?.[0]?.message?.content || 'no response';
+        
+        conversationHistory.push({ role: 'assistant', content: botResponse });
+        typeResponse(botResponse);
+
+      } catch (error) {
+        removeTyping();
+        addMessage('neural link interrupted. try again.', 'error');
+        setProcessing(false);
+      }
     }
 
     sendBtn.addEventListener('click', () => sendMessage());
@@ -583,10 +582,9 @@
       });
     });
 
-    // Focus input on load
     chatInput.focus();
 
-    // Glitch effect on title occasionally
+    // Glitch effect
     setInterval(() => {
       const title = document.querySelector('h1');
       title.style.textShadow = `${Math.random() * 4 - 2}px 0 #ff0000, ${Math.random() * 4 - 2}px 0 #00ffff`;
