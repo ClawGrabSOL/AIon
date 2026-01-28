@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ask Alon Cohen</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 750px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ascii-container {
+      background: #000000;
+      padding: 20px;
+      border-radius: 4px;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    .ascii-art {
+      font-family: 'JetBrains Mono', 'Courier New', monospace;
+      font-size: 7px;
+      line-height: 8px;
+      color: #e0e0e0;
+      white-space: pre;
+      letter-spacing: 0px;
+      text-align: center;
+    }
+
+    .tagline {
+      margin-top: 25px;
+      font-size: 16px;
+      color: #666666;
+      text-align: center;
+    }
+
+    .chat-container {
+      width: 100%;
+      margin-top: 30px;
+    }
+
+    .messages {
+      max-height: 300px;
+      overflow-y: auto;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .message {
+      padding: 12px 16px;
+      border-radius: 12px;
+      max-width: 80%;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .message.user {
+      background: #f0f0f0;
+      align-self: flex-end;
+      color: #333;
+    }
+
+    .message.bot {
+      background: #000;
+      color: #e0e0e0;
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .input-container {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 15px 20px;
+      font-size: 16px;
+      font-family: 'Inter', sans-serif;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .chat-input:focus {
+      border-color: #999;
+    }
+
+    .chat-input::placeholder {
+      color: #999;
+    }
+
+    .send-btn {
+      padding: 15px 25px;
+      font-size: 14px;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      background: #fafafa;
+      border: 1px solid #e0e0e0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .send-btn:hover {
+      background: #f0f0f0;
+      border-color: #ccc;
+    }
+
+    .send-btn:active {
+      transform: scale(0.98);
+    }
+
+    .typing {
+      display: none;
+      padding: 12px 16px;
+      background: #000;
+      color: #e0e0e0;
+      border-radius: 12px;
+      align-self: flex-start;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .typing.show {
+      display: block;
+    }
+
+    .typing::after {
+      content: '...';
+      animation: dots 1.5s infinite;
+    }
+
+    @keyframes dots {
+      0%, 20% { content: '.'; }
+      40% { content: '..'; }
+      60%, 100% { content: '...'; }
+    }
+
+    @media (max-width: 600px) {
+      .ascii-art {
+        font-size: 4px;
+        line-height: 5px;
+      }
+      
+      .input-container {
+        flex-direction: column;
+      }
+      
+      .send-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="ascii-container">
+      <pre class="ascii-art">-:::::::::::=****************-.              ....:::::::::::::::.:...................
+.....::::::..-***************-.       .::::::::::::....:::::::.......................
+.......::::::.-*%%%%%******%*-::=+*%@@@#####@@@@@%%*+=-:.......................:++-..
+-:.  ...::::::.-*%%%%%%%%%*+=::---==*@##@@@#@@@@%%*@##@@%*+-:................-*@@@@%*
+---:.  ..:==::..:*%%%%%*=-=- .       .-*#@@@#@#@%@%@@@@#####@+:............-*@@@@@@@@
+:::--:...:=+-::..:+%%+: :=*@: ......    +#@######@@***@@@@@@##@-........:=%@@@%%@%%%%
+.....::. .------:::=-  .***%* .        . +#@####@##@%%@@@@@@@@#@-.:...:+%@@@%%%%%%%%%
+      ....:-:-:-:..... -%++%%.  .       . *#@@@@@@@#############@:..-+@@@%@@%%%%%%%%%
+       ..:..    .:.....+*++%%++*-         .@#######@@@@@%%%%%%%@@%-*@@@@@@@%@%%%%%%%%
+     .:--=-::.  .:.::.-@%%**===:.   . .. ..-+==---:::...... .:.::-+@@%@@@@%%@%%%%%%%%
+    .-======--:.......=---:................     .. . ....:.::.-:---*@%%%%@@%%%%%%%%%%
+    .--:-:::::::.::--:::::::::........ ...::-===::*:.-*:**-*=-==+=++%@%%%%%%%%%%%%%%%
+   -==-::... .   .:................... =+++-+--:  -.  : .........:--+@%%%%%%**%%%%%%%
+. :%%=-:---::. .:--::...................:. .    .. ... .....::-----=*%%%%*+=-==+*%%%%
+:.:*@*-:--::::::-::-=------:::::::...........--::::--=-:::::-==**--=%%%*=--:-=++*%%%%
+:..*%%*:..    ::::.-----===---==:-+:.:======.:+==:.++-.   .....-%*--*%*=-=+**+*%%%%%%
+  .%@@*--::.  :--::----==-::-=+:  .....:-===:::=+=:-:=+**+-:.   .:--=%%%%%%%%%%%%%%%%
+  :@@@*===--::-:...---==----=+-.--::.      :-=-..:: .-==:.:=**+=:  :-*@@@%%%*%%%%%%%%
+  :%@@*::... .=---:--+=--==++- =*:.   :=++-::.    ...   -%@###@%@+ .-=%%@**%**@%%%%%%
+  :@@@*:..    --::--++===:.:.       =*%####@%%*=       *##@@@@%*@+ :--+@@%*%%*@%%%%%%
+  .**%+:..   .-. :-=+===:          =##@@@@@@@**%=     -#@@@@@%*%% :+---%@%%@@%@@@@@@%
+  .===-:.    .-.:==++-......       @%%@@#@@@%**%- ..: :@@@@@@%%+ :*=---=%+=*@%@@@@@@@
+  .**+=:.    .-:==+++-.........    -@@%%%@@@%%*- ..... :+*%%*=.:+%*=-=%=-+*%@@@@@@@@+
+  .*%*+:.    .=.=++*+==-........    .=*%%%%++-. ...  .:...... -%***=-*%*=-*****+++==:
+  .**%+:.    .- =++*+-=*+===-:......    .     ......:..::::..=****+-=**+*++**+*+++=--
+  .+++=:.    .-.=+++*=-++****++-::............. =*%%*:..:.::+*****--=::-==-=+=++++=*@
+  .+*=-:..    :.++++++-=+++++****+-:............::....:::-+%%****=-=-:-:::::... .--=*
+  .*++=-:..  :+=+++=++==++*++=-::.    .............::::::--==+***=+==::::---=--:::...
+  .%@*-::.==-=@#*=+++++=+*-:.....      ...::::::::::::::::::::-****==-:::.:::-:---===
+  .*%****+**==+%*=++*++*+-....       ....::::::::::::::::::::::==+*+=-:::::::::::::::
+..-@@##@@@@*++===+=++-=-.......     ..  .::::::::. .::::::--:--:::+*+-:--::-::-::-:::
+::-*@@@%*+=====---++-:.....       ..:.   .:::::::   .::--------:-:-*+----::---:::::::
+=---====-----------+:.....:......:::::              .:::--------:--*=:---:-----:--:::
+====----==--:---:..:....::::::--::::::    =---=--=  .::.:----------=----::----------:
+========-::---:........:::::::::::::::    %==+*%%@. .:::.:-------:-------::::.:------
+=====-:--===--:::..:::::::::::::::::::    *+-=+**.  .:::::---------------.::.: :::---
+==--:--==-------:::.::::::::::::::::::    =---=-=.  .::::::--------------:.=+:==--::-
+::--===-::::.......:::::::-::::::::::.    *%+*@%%-   ::::::------:-------::*==-:-%: .
+-===--==:.......::::::::::::::::::::.     ++=++**-    .:.:::-------------::*+:       
+====----.......:::::::------::::::::      +++++=*:     -:.:.:-::---------- .--: ...::
+=-----+-.......::::::::---::::::::::      +-++++*-     -:..:.:-----------:.:---...:--
+-===-=-.....:::::::::------::::::::.                   :-:..:.-----------.:---==-=:::</pre>
+    </div>
+
+    <p class="tagline">ask alon cohen about anything</p>
+
+    <div class="chat-container">
+      <div class="messages" id="messages">
+        <!-- Messages appear here -->
+      </div>
+      
+      <div class="input-container">
+        <input 
+          type="text" 
+          class="chat-input" 
+          id="chatInput" 
+          placeholder="what's your take on crypto?"
+          autocomplete="off"
+        >
+        <button class="send-btn" id="sendBtn">ASK</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const responses = [
+      "look, the thing about crypto is... it's not about the money. it's about sending a message.",
+      "you want my honest take? most people are ngmi. but that's fine. more for us.",
+      "i've seen things you wouldn't believe. mass liquidations, rug pulls, the whole circus.",
+      "the secret? buy when there's blood in the streets. even if it's your own blood.",
+      "everyone wants to be rich but nobody wants to grind. that's the real problem.",
+      "i don't give financial advice. i give reality checks.",
+      "ser, have you tried not being poor? works every time.",
+      "the market can stay irrational longer than you can stay solvent. i've learned that the hard way.",
+      "stop looking for shortcuts. there are none. only hard work and good timing.",
+      "you're asking the wrong questions. the right question is: what are you willing to sacrifice?",
+      "i've been in this game long enough to know... patience is everything.",
+      "don't trust anyone in crypto. not even me. especially not me.",
+      "the difference between winners and losers? winners don't quit when it gets hard.",
+      "you want alpha? here's alpha: most 'alpha' is just recycled garbage.",
+      "interesting question. my answer? figure it out yourself. that's how you actually learn."
+    ];
+
+    const messagesContainer = document.getElementById('messages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function addMessage(text, isUser) {
+      const msg = document.createElement('div');
+      msg.className = `message ${isUser ? 'user' : 'bot'}`;
+      msg.textContent = text;
+      messagesContainer.appendChild(msg);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    function getRandomResponse() {
+      return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    function sendMessage() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, true);
+      chatInput.value = '';
+
+      // Show typing indicator
+      const typing = document.createElement('div');
+      typing.className = 'message bot';
+      typing.textContent = '...';
+      typing.id = 'typing';
+      messagesContainer.appendChild(typing);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+      // Simulate response delay
+      setTimeout(() => {
+        const typingEl = document.getElementById('typing');
+        if (typingEl) typingEl.remove();
+        addMessage(getRandomResponse(), false);
+      }, 1000 + Math.random() * 1500);
+    }
+
+    sendBtn.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    // Focus input on load
+    chatInput.focus();
+  </script>
+</body>
+</html>
