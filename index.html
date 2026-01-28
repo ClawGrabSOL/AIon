@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ask Alon Cohen</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     * {
       margin: 0;
@@ -14,178 +14,338 @@
     }
 
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      background: #000000;
+      color: #00ff00;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
+      overflow-x: hidden;
+    }
+
+    /* Scanline effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* CRT flicker */
+    @keyframes flicker {
+      0% { opacity: 0.97; }
+      50% { opacity: 1; }
+      100% { opacity: 0.98; }
     }
 
     .container {
-      max-width: 750px;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 20px;
+      animation: flicker 0.15s infinite;
     }
 
-    .ascii-container {
-      background: #000000;
-      padding: 20px;
-      border-radius: 4px;
-      overflow: hidden;
-      width: 100%;
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 20px 0;
+      border-bottom: 1px solid #00ff00;
+      margin-bottom: 20px;
+    }
+
+    .header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #00ff00;
+    }
+
+    .header .status {
+      font-size: 12px;
+      color: #00aa00;
+      margin-top: 5px;
+    }
+
+    .status::before {
+      content: "● ";
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Main layout */
+    .main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      min-height: 70vh;
+    }
+
+    /* ASCII section */
+    .ascii-section {
+      border: 1px solid #00ff00;
+      padding: 15px;
+      position: relative;
+      background: rgba(0, 255, 0, 0.02);
+    }
+
+    .ascii-section::before {
+      content: "[ SUBJECT ]";
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      background: #000;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #00aa00;
     }
 
     .ascii-art {
-      font-family: 'JetBrains Mono', 'Courier New', monospace;
-      font-size: 7px;
-      line-height: 8px;
-      color: #e0e0e0;
+      font-size: 5.5px;
+      line-height: 6px;
+      color: #00ff00;
       white-space: pre;
       letter-spacing: 0px;
-      text-align: center;
+      text-shadow: 0 0 5px #00ff00;
+      overflow: hidden;
     }
 
-    .tagline {
-      margin-top: 25px;
-      font-size: 16px;
-      color: #666666;
-      text-align: center;
+    /* Chat section */
+    .chat-section {
+      border: 1px solid #00ff00;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: rgba(0, 255, 0, 0.02);
     }
 
-    .chat-container {
-      width: 100%;
-      margin-top: 30px;
+    .chat-section::before {
+      content: "[ TERMINAL ]";
+      position: absolute;
+      top: -10px;
+      left: 10px;
+      background: #000;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #00aa00;
     }
 
     .messages {
-      max-height: 300px;
+      flex: 1;
       overflow-y: auto;
-      margin-bottom: 20px;
+      padding: 20px;
       display: flex;
       flex-direction: column;
       gap: 15px;
+      max-height: 500px;
     }
 
     .message {
-      padding: 12px 16px;
-      border-radius: 12px;
-      max-width: 80%;
-      font-size: 14px;
-      line-height: 1.5;
+      font-size: 13px;
+      line-height: 1.6;
+      padding: 10px 0;
+      border-bottom: 1px solid #003300;
+    }
+
+    .message .prefix {
+      color: #00aa00;
+      margin-right: 10px;
+    }
+
+    .message.user .prefix {
+      color: #ffff00;
     }
 
     .message.user {
-      background: #f0f0f0;
-      align-self: flex-end;
-      color: #333;
+      color: #ffff00;
     }
 
     .message.bot {
-      background: #000;
-      color: #e0e0e0;
-      align-self: flex-start;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      color: #00ff00;
     }
 
-    .input-container {
+    .message.system {
+      color: #00aa00;
+      font-style: italic;
+      font-size: 11px;
+    }
+
+    /* Typing animation */
+    .typing-cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: #00ff00;
+      animation: cursor-blink 0.8s infinite;
+      vertical-align: middle;
+      margin-left: 2px;
+    }
+
+    @keyframes cursor-blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* Input area */
+    .input-area {
+      border-top: 1px solid #00ff00;
+      padding: 15px;
       display: flex;
       gap: 10px;
-      width: 100%;
+      align-items: center;
+    }
+
+    .input-prompt {
+      color: #00ff00;
+      font-size: 14px;
     }
 
     .chat-input {
       flex: 1;
-      padding: 15px 20px;
-      font-size: 16px;
-      font-family: 'Inter', sans-serif;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
+      background: transparent;
+      border: none;
+      color: #00ff00;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
       outline: none;
-      transition: border-color 0.2s;
-    }
-
-    .chat-input:focus {
-      border-color: #999;
+      caret-color: #00ff00;
     }
 
     .chat-input::placeholder {
-      color: #999;
+      color: #005500;
     }
 
     .send-btn {
-      padding: 15px 25px;
-      font-size: 14px;
-      font-weight: 500;
-      font-family: 'Inter', sans-serif;
-      background: #fafafa;
-      border: 1px solid #e0e0e0;
-      border-radius: 10px;
+      background: #00ff00;
+      color: #000;
+      border: none;
+      padding: 8px 20px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
+      transition: all 0.1s;
     }
 
     .send-btn:hover {
-      background: #f0f0f0;
-      border-color: #ccc;
+      background: #00cc00;
+      box-shadow: 0 0 20px #00ff00;
     }
 
     .send-btn:active {
-      transform: scale(0.98);
+      transform: scale(0.95);
     }
 
-    .typing {
-      display: none;
-      padding: 12px 16px;
+    /* Commands hint */
+    .commands {
+      border: 1px solid #00ff00;
+      margin-top: 20px;
+      padding: 15px;
+      position: relative;
+      background: rgba(0, 255, 0, 0.02);
+    }
+
+    .commands::before {
+      content: "[ COMMANDS ]";
+      position: absolute;
+      top: -10px;
+      left: 10px;
       background: #000;
-      color: #e0e0e0;
-      border-radius: 12px;
-      align-self: flex-start;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 13px;
+      padding: 0 10px;
+      font-size: 11px;
+      color: #00aa00;
     }
 
-    .typing.show {
-      display: block;
+    .commands-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
     }
 
-    .typing::after {
-      content: '...';
-      animation: dots 1.5s infinite;
+    .cmd {
+      font-size: 11px;
+      color: #00aa00;
+      cursor: pointer;
+      padding: 8px;
+      border: 1px solid #003300;
+      text-align: center;
+      transition: all 0.1s;
     }
 
-    @keyframes dots {
-      0%, 20% { content: '.'; }
-      40% { content: '..'; }
-      60%, 100% { content: '...'; }
+    .cmd:hover {
+      border-color: #00ff00;
+      color: #00ff00;
+      background: rgba(0, 255, 0, 0.1);
     }
 
-    @media (max-width: 600px) {
+    /* Glitch effect on hover */
+    .glitch:hover {
+      animation: glitch 0.3s infinite;
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .main {
+        grid-template-columns: 1fr;
+      }
+      
       .ascii-art {
         font-size: 4px;
-        line-height: 5px;
+        line-height: 4.5px;
       }
       
-      .input-container {
-        flex-direction: column;
+      .commands-grid {
+        grid-template-columns: repeat(2, 1fr);
       }
-      
-      .send-btn {
-        width: 100%;
-      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #001100;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #00ff00;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="ascii-container">
-      <pre class="ascii-art">-:::::::::::=****************-.              ....:::::::::::::::.:...................
+    <div class="header">
+      <h1 class="glitch">Alon Cohen</h1>
+      <div class="status">ONLINE — READY TO CHAT</div>
+    </div>
+
+    <div class="main">
+      <div class="ascii-section">
+        <pre class="ascii-art">-:::::::::::=****************-.              ....:::::::::::::::.:...................
 .....::::::..-***************-.       .::::::::::::....:::::::.......................
 .......::::::.-*%%%%%******%*-::=+*%@@@#####@@@@@%%*+=-:.......................:++-..
 -:.  ...::::::.-*%%%%%%%%%*+=::---==*@##@@@#@@@@%%*@##@@%*+-:................-*@@@@%*
@@ -227,93 +387,213 @@
 ====----.......:::::::------::::::::      +++++=*:     -:.:.:-::---------- .--: ...::
 =-----+-.......::::::::---::::::::::      +-++++*-     -:..:.:-----------:.:---...:--
 -===-=-.....:::::::::------::::::::.                   :-:..:.-----------.:---==-=:::</pre>
+      </div>
+
+      <div class="chat-section">
+        <div class="messages" id="messages">
+          <div class="message system">
+            > SYSTEM: Connection established. You are now chatting with ALON COHEN.
+          </div>
+          <div class="message system">
+            > Type your message or click a command below.
+          </div>
+        </div>
+        
+        <div class="input-area">
+          <span class="input-prompt">>&nbsp;</span>
+          <input 
+            type="text" 
+            class="chat-input" 
+            id="chatInput" 
+            placeholder="enter your message..."
+            autocomplete="off"
+          >
+          <button class="send-btn" id="sendBtn">SEND</button>
+        </div>
+      </div>
     </div>
 
-    <p class="tagline">ask alon cohen about anything</p>
-
-    <div class="chat-container">
-      <div class="messages" id="messages">
-        <!-- Messages appear here -->
-      </div>
-      
-      <div class="input-container">
-        <input 
-          type="text" 
-          class="chat-input" 
-          id="chatInput" 
-          placeholder="what's your take on crypto?"
-          autocomplete="off"
-        >
-        <button class="send-btn" id="sendBtn">ASK</button>
+    <div class="commands">
+      <div class="commands-grid">
+        <div class="cmd" data-cmd="who are you?">WHO</div>
+        <div class="cmd" data-cmd="what's your take on crypto?">CRYPTO</div>
+        <div class="cmd" data-cmd="give me some alpha">ALPHA</div>
+        <div class="cmd" data-cmd="what's the secret to success?">SUCCESS</div>
+        <div class="cmd" data-cmd="tell me about silver">SILVER</div>
+        <div class="cmd" data-cmd="what should I buy?">BUY</div>
+        <div class="cmd" data-cmd="wen moon?">MOON</div>
+        <div class="cmd" data-cmd="tell me a secret">SECRET</div>
       </div>
     </div>
   </div>
 
   <script>
-    const responses = [
-      "look, the thing about crypto is... it's not about the money. it's about sending a message.",
-      "you want my honest take? most people are ngmi. but that's fine. more for us.",
-      "i've seen things you wouldn't believe. mass liquidations, rug pulls, the whole circus.",
-      "the secret? buy when there's blood in the streets. even if it's your own blood.",
-      "everyone wants to be rich but nobody wants to grind. that's the real problem.",
-      "i don't give financial advice. i give reality checks.",
-      "ser, have you tried not being poor? works every time.",
-      "the market can stay irrational longer than you can stay solvent. i've learned that the hard way.",
-      "stop looking for shortcuts. there are none. only hard work and good timing.",
-      "you're asking the wrong questions. the right question is: what are you willing to sacrifice?",
-      "i've been in this game long enough to know... patience is everything.",
-      "don't trust anyone in crypto. not even me. especially not me.",
-      "the difference between winners and losers? winners don't quit when it gets hard.",
-      "you want alpha? here's alpha: most 'alpha' is just recycled garbage.",
-      "interesting question. my answer? figure it out yourself. that's how you actually learn."
-    ];
+    const responses = {
+      default: [
+        "interesting question. let me think about that for a second... actually no, figure it out yourself.",
+        "look, i've seen a lot of questions in my time. this one? it's not the worst.",
+        "you want my honest opinion? most people can't handle my honest opinion.",
+        "that's above my pay grade. just kidding, nothing is above my pay grade.",
+        "i could tell you, but then i'd have to charge you consulting fees.",
+        "the answer is always the same: do your own research. i'm not your financial advisor.",
+      ],
+      crypto: [
+        "crypto? it's the wild west out here. only the strong survive.",
+        "everyone's a genius in a bull market. bear markets separate the men from the boys.",
+        "the best time to buy was yesterday. the second best time is now. or never. depends on the coin.",
+        "i've seen millionaires made and destroyed in 24 hours. that's the game.",
+        "don't invest more than you can afford to lose. actually, invest exactly what you can't afford to lose. that's how you stay focused.",
+      ],
+      alpha: [
+        "alpha? you want alpha? here's alpha: 90% of 'alpha' is just recycled garbage.",
+        "the real alpha is not needing alpha. think about that.",
+        "buy low, sell high. revolutionary, i know.",
+        "the best alpha is the one you find yourself. stop asking others.",
+        "everyone selling alpha is just selling exit liquidity. including me. especially me.",
+      ],
+      success: [
+        "success = pain tolerance × time × luck. mostly luck. but you need the other two to capitalize on it.",
+        "the secret? there is no secret. just don't quit when everyone else does.",
+        "outwork everyone. when you're tired, remember someone else isn't.",
+        "success is just failing forward until something sticks.",
+        "rule #1: don't lose money. rule #2: don't forget rule #1. rule #3: sometimes you forget rules 1 and 2.",
+      ],
+      who: [
+        "i'm alon. i've been around. seen some things. done some things.",
+        "who am i? i'm the guy your mom warned you about. jk i'm just a guy with opinions.",
+        "i'm nobody special. just someone who's been in the trenches longer than most.",
+        "name's alon. i give advice nobody asked for. you're welcome.",
+      ],
+      silver: [
+        "silver? real money for 5000 years. meanwhile your dollar loses value by the minute.",
+        "stack silver, stack gold, stack assets. paper money is a meme.",
+        "silver is the play when everything else looks uncertain. and everything always looks uncertain.",
+        "the silver squeeze is always coming. any day now. trust the plan. (not financial advice)",
+      ],
+      buy: [
+        "what should you buy? not financial advice, but... physical silver, always.",
+        "buy assets that can't be printed. simple as.",
+        "the best investment is always yourself. the second best? whatever hasn't pumped yet.",
+        "i'm legally required to say this is not financial advice. so... not financial advice.",
+      ],
+      moon: [
+        "wen moon? ser, we're already on the moon. you just can't see it yet.",
+        "moon soon. or not. probably not. but maybe.",
+        "the moon is a state of mind. have you considered touching grass instead?",
+        "lambo wen? lambo never. freedom is the real wealth.",
+      ],
+      secret: [
+        "you want a secret? the game is rigged. but it's the only game in town.",
+        "here's a secret: everyone is making it up as they go. everyone.",
+        "the biggest secret? consistency beats everything. boring, but true.",
+        "secret: the people who look like they have it figured out are the most lost.",
+        "i'll tell you a secret... [REDACTED]. you didn't hear it from me.",
+      ],
+    };
 
     const messagesContainer = document.getElementById('messages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
+    const cmdBtns = document.querySelectorAll('.cmd');
 
-    function addMessage(text, isUser) {
+    function getCategory(text) {
+      const lower = text.toLowerCase();
+      if (lower.includes('crypto') || lower.includes('bitcoin') || lower.includes('coin')) return 'crypto';
+      if (lower.includes('alpha') || lower.includes('tip')) return 'alpha';
+      if (lower.includes('success') || lower.includes('rich') || lower.includes('money')) return 'success';
+      if (lower.includes('who') || lower.includes('you')) return 'who';
+      if (lower.includes('silver') || lower.includes('gold') || lower.includes('metal')) return 'silver';
+      if (lower.includes('buy') || lower.includes('invest') || lower.includes('purchase')) return 'buy';
+      if (lower.includes('moon') || lower.includes('wen') || lower.includes('lambo')) return 'moon';
+      if (lower.includes('secret') || lower.includes('tell me')) return 'secret';
+      return 'default';
+    }
+
+    function getResponse(text) {
+      const category = getCategory(text);
+      const options = responses[category];
+      return options[Math.floor(Math.random() * options.length)];
+    }
+
+    function addMessage(text, type) {
       const msg = document.createElement('div');
-      msg.className = `message ${isUser ? 'user' : 'bot'}`;
-      msg.textContent = text;
+      msg.className = `message ${type}`;
+      
+      if (type === 'user') {
+        msg.innerHTML = `<span class="prefix">[YOU]</span> ${text}`;
+      } else if (type === 'bot') {
+        msg.innerHTML = `<span class="prefix">[ALON]</span> ${text}`;
+      } else {
+        msg.textContent = text;
+      }
+      
       messagesContainer.appendChild(msg);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
 
-    function getRandomResponse() {
-      return responses[Math.floor(Math.random() * responses.length)];
-    }
-
-    function sendMessage() {
-      const text = chatInput.value.trim();
-      if (!text) return;
-
-      addMessage(text, true);
-      chatInput.value = '';
-
-      // Show typing indicator
-      const typing = document.createElement('div');
-      typing.className = 'message bot';
-      typing.textContent = '...';
-      typing.id = 'typing';
-      messagesContainer.appendChild(typing);
+    function typeResponse(text) {
+      const msg = document.createElement('div');
+      msg.className = 'message bot';
+      msg.innerHTML = `<span class="prefix">[ALON]</span> <span id="typing-text"></span><span class="typing-cursor"></span>`;
+      messagesContainer.appendChild(msg);
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
-      // Simulate response delay
-      setTimeout(() => {
-        const typingEl = document.getElementById('typing');
-        if (typingEl) typingEl.remove();
-        addMessage(getRandomResponse(), false);
-      }, 1000 + Math.random() * 1500);
+      const typingText = document.getElementById('typing-text');
+      let i = 0;
+      
+      const typeChar = () => {
+        if (i < text.length) {
+          typingText.textContent += text.charAt(i);
+          i++;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          setTimeout(typeChar, 20 + Math.random() * 40);
+        } else {
+          // Remove cursor when done
+          const cursor = msg.querySelector('.typing-cursor');
+          if (cursor) cursor.remove();
+          typingText.removeAttribute('id');
+        }
+      };
+      
+      typeChar();
     }
 
-    sendBtn.addEventListener('click', sendMessage);
+    function sendMessage(text) {
+      if (!text) text = chatInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, 'user');
+      chatInput.value = '';
+
+      // Simulate thinking delay
+      setTimeout(() => {
+        typeResponse(getResponse(text));
+      }, 500 + Math.random() * 1000);
+    }
+
+    sendBtn.addEventListener('click', () => sendMessage());
     chatInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendMessage();
     });
 
+    cmdBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cmd = btn.getAttribute('data-cmd');
+        sendMessage(cmd);
+      });
+    });
+
     // Focus input on load
     chatInput.focus();
+
+    // Glitch effect on title occasionally
+    setInterval(() => {
+      const title = document.querySelector('h1');
+      title.style.textShadow = `${Math.random() * 4 - 2}px 0 #ff0000, ${Math.random() * 4 - 2}px 0 #00ffff`;
+      setTimeout(() => {
+        title.style.textShadow = '0 0 10px #00ff00';
+      }, 100);
+    }, 5000);
   </script>
 </body>
 </html>
